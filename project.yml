@@ -1,0 +1,105 @@
+name: OstomyLog
+options:
+  bundleIdPrefix: com.example
+  deploymentTarget:
+    iOS: "17.0"
+  createIntermediateGroups: true
+  generateEmptyDirectories: true
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    MARKETING_VERSION: "1.0"
+    CURRENT_PROJECT_VERSION: "1"
+    CODE_SIGN_STYLE: Automatic
+    DEVELOPMENT_TEAM: ""
+targets:
+  OstomyLog:
+    type: application
+    platform: iOS
+    sources:
+      - path: OstomyLog
+      - path: Shared
+    dependencies:
+      - target: OstomyLogWidget
+        embed: true
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.ostomy-log
+        TARGETED_DEVICE_FAMILY: "1"
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+        CODE_SIGN_ENTITLEMENTS: OstomyLog/OstomyLog.entitlements
+    info:
+      path: OstomyLog/Info.plist
+      properties:
+        CFBundleDisplayName: Ostomy Log
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        UILaunchScreen: {}
+        UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
+        # PhotoField needs these. Say what the photo is actually for; Apple rejects vague strings.
+        NSCameraUsageDescription: Take a photo of the skin around your stoma or of a leak, to keep with that record on this phone.
+        NSPhotoLibraryUsageDescription: Choose a photo of the skin around your stoma or of a leak, to keep with that record on this phone.
+        ITSAppUsesNonExemptEncryption: false
+  OstomyLogWidget:
+    type: app-extension
+    platform: iOS
+    sources:
+      - path: OstomyLogWidget
+      - path: Shared
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.ostomy-log.widget
+        TARGETED_DEVICE_FAMILY: "1"
+        CODE_SIGN_ENTITLEMENTS: OstomyLogWidget/OstomyLogWidget.entitlements
+        SKIP_INSTALL: YES
+    info:
+      path: OstomyLogWidget/Info.plist
+      properties:
+        CFBundleDisplayName: Ostomy Log Widget
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.widgetkit-extension
+  OstomyLogUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - path: OstomyLogUITests
+    dependencies:
+      - target: OstomyLog
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.ostomy-log.uitests
+        GENERATE_INFOPLIST_FILE: YES
+        TEST_TARGET_NAME: OstomyLog
+  OstomyLogTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: OstomyLogTests
+    dependencies:
+      - target: OstomyLog
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.ostomy-log.tests
+        GENERATE_INFOPLIST_FILE: YES
+schemes:
+  OstomyLog:
+    build:
+      targets:
+        OstomyLog: all
+        OstomyLogTests: [test]
+        OstomyLogUITests: [test]
+    run:
+      config: Debug
+      storeKitConfiguration: OstomyLog/StoreKit/Products.storekit
+    test:
+      config: Debug
+      storeKitConfiguration: OstomyLog/StoreKit/Products.storekit
+      targets:
+        - OstomyLogTests
+        - OstomyLogUITests
+    archive:
+      config: Release
